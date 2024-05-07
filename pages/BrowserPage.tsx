@@ -25,7 +25,10 @@ export function BrowserPage({navigation}) {
 			console.log(items.length)
 
 			setPage(page + 1);
-			setItems([...items, ...posts])
+
+			//Concat removes duplets
+			let merged = items.concat(posts);
+			setItems(merged);
 			
 		}
 	}
