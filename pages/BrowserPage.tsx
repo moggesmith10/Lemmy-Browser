@@ -5,7 +5,7 @@ import { LemmyHttp, PostView } from "lemmy-js-client";
 import { BrowserStyles } from "../styles/Browser";
 import { CommonStyles } from "../styles/Global";
 import { useSharedState } from "../components/StateContext";
-import { TextPost } from "../visual/TextPost";
+import { TextPost } from "../visual/Post";
 import { LoginStyles } from "../styles/Login";
 import InfiniteScroll from 'react-infinite-scroller';
 
@@ -38,7 +38,7 @@ export function BrowserPage({navigation}) {
 					items
 				}
 				renderItem= {({item}) => <TextPost navigation={navigation} post={item}/>}
-			keyExtractor={(item :PostView) => item.community.id.toString() + item.post.id.toString()}
+			keyExtractor={(item :PostView) => item.community.id.toString() + "|" + item.post.id.toString()}
 				onEndReached={loadMorePosts}
 				/*{items.map((item, index) => (rl
 					<TextPost  />

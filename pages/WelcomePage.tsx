@@ -3,9 +3,6 @@ import { CommonStyles } from "../styles/Global";
 import { WelcomeStyles } from "../styles/Welcome";
 
 export function WelcomePage({navigation}){
-
-    name()
-
     return (
         <View style={[CommonStyles.page, WelcomeStyles.page]}>
             <View>
@@ -15,8 +12,4 @@ export function WelcomePage({navigation}){
             <Text onPress={() => {navigation.navigate("Login")}} style={[CommonStyles.button, WelcomeStyles.button]}>Login</Text>
         </View>
     )
-
-    async function name() {
-        console.log(await fetch("https://lemmy.world")) 
-    }
 }

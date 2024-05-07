@@ -5,6 +5,8 @@ import { BrowserStyles } from "../styles/Browser";
 import { CommonStyles } from "../styles/Global";
 import { NavigationContainer } from "@react-navigation/native";
 import { TextPostStyles } from "../styles/TextPost";
+import { displayImage } from "../functions/DisplayImage";
+import { displayContent } from "../functions/DisplayContent";
 
 export function TextPost({
 	navigation,
@@ -27,6 +29,7 @@ export function TextPost({
 								{post.community.title + " | " + post.creator.name}
 							</Text>
 							<Text style={[TextPostStyles.title]}>{post.post.name}</Text>
+							{displayContent(post)}
 						</TouchableOpacity>
 					</View>
 				);
