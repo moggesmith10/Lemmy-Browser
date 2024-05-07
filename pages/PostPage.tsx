@@ -5,6 +5,7 @@ import { PostStyles } from "../styles/Post";
 import FullWidthImage from 'react-native-fullwidth-image'
 import { displayImage } from "../functions/DisplayImage";
 import { displayContent } from "../functions/DisplayContent";
+import { displayVotes } from "../functions/DisplayVotes";
 
 export function PostPage({ route, navigation }) {
 	let { post }: { post: PostView } = route.params;
@@ -19,6 +20,8 @@ export function PostPage({ route, navigation }) {
 			</View>
 			<Text style={[PostStyles.body]}>{post.post.body}</Text>
 			{displayContent(post)}
+			{displayVotes(post)}
+
 		</View>
 	);
 }

@@ -10,6 +10,8 @@ export const BrowserStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "white",
         padding: 2,
-        margin: 5
+        margin: 5,
+		borderCurve: "circular",
+		borderRadius: 10
 	},
 });

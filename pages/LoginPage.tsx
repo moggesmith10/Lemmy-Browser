@@ -5,6 +5,8 @@ import { LoginService } from "../components/LoginService";
 import { ChangeEvent, useState } from "react";
 import { walkUpBindingElementsAndPatterns } from "typescript";
 import GlobalStateService from "../components/StateService";
+import { CommonActions } from '@react-navigation/native';
+
 
 export function LoginPage({navigation}){
 
@@ -34,7 +36,12 @@ export function LoginPage({navigation}){
         let client = await loginService.login(instance, username, password); 
         if(client != null){
             state.set("client", client)
-            navigation.navigate("Browser")
+            navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'Browser' }, {name: "Account"}], 
+                })
+              );
         }
         else{
             //TODO
