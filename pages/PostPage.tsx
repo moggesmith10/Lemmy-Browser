@@ -11,44 +11,48 @@ import { useEffect, useState } from "react";
 
 export function PostPage({ route, navigation }) {
 
-	let commentService: CommentService = new CommentService(); 
+	let commentService: CommentService = new CommentService();
 
 	let { post }: { post: PostView } = route.params;
 	const [comments, setComments]: [Array<CommentView>, Function] = useState([]);
 	const [page, setPage] = useState(1);
+	const [endReached, setEndReached] = useState(false);
 
-		//Chat GPT
-		function mergeArraysByValue(arr1: Array<CommentView>, arr2: Array<CommentView>) {
-			const mergedArray = [...arr1];
-	
-			for (const obj of arr2) {
-				const existingObj = mergedArray.find(
-					(item) =>
-						item.comment.id === obj.comment.id
-				);
-				if (!existingObj) {
-					mergedArray.push(obj);
-				}
+	//Chat GPT
+	function mergeArraysByValue(arr1: Array<CommentView>, arr2: Array<CommentView>) {
+		const mergedArray = [...arr1];
+
+		for (const obj of arr2) {
+			const existingObj = mergedArray.find(
+				(item) =>
+					item.comment.id === obj.comment.id
+			);
+			if (!existingObj) {
+				mergedArray.push(obj);
 			}
-	
-			return mergedArray;
-		}
-	
-		async function loadMoreComments() {
-
-				let newComments = commentService.getComment(post.post.id, page)
-	
-				setPage(page + 1);
-	
-				setComments(mergeArraysByValue(comments,await newComments));
-			
 		}
 
-		useEffect(() => {
-			if(page == 1){
+		return mergedArray;
+	}
+
+	async function loadMoreComments() {
+		if (!endReached) {
+			let newComments = commentService.getComment(post.post.id, page)
+			if((await newComments).length == 0){
+				setEndReached(true);
+			}
+
+			setPage(page + 1);
+
+			setComments(mergeArraysByValue(comments, await newComments));
+		}
+	}
+
+	useEffect(() => {
+		if (page == 1) {
 			loadMoreComments();
-			}
-		})
+		}
+	})
 
 
 	return (
