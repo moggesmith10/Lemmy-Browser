@@ -14,5 +14,13 @@ export const PostStyles = StyleSheet.create({
     },
     body:{
         color:"lightgrey"
+    },
+    commentPoster:{
+        color:"lightgrey",
+        fontSize: 20
+    },
+    comment:{
+        color:"white",
+        fontSize: 15
     }
 });
