@@ -6,15 +6,39 @@ import { ChangeEvent, useState } from "react";
 import { walkUpBindingElementsAndPatterns } from "typescript";
 import GlobalStateService from "../components/StateService";
 import { CommonActions } from '@react-navigation/native';
-
+import * as SecureStore from 'expo-secure-store';
 
 export function LoginPage({navigation}){
 
     let loginService = new LoginService();
 
-    const [instance, setInstance] = useState('https://lemmy.world');
-    const [username, setUsername] = useState('bigboismith');
-    const [password, setPassword] = useState('');
+    function getDefaultInstance(){
+      let defaultInstance = SecureStore.getItem("loginInstance") 
+      if(defaultInstance != null){
+        return defaultInstance;
+      }
+      return 'https://lemmy.world';
+    }
+
+    function getDefaultUsername(){
+      let defaultUsername = SecureStore.getItem("loginUsername") 
+      if(defaultUsername != null){
+        return defaultUsername;
+      }
+      return '';
+    }
+
+    function getDefaultPassword(){
+      let defaultPassword = SecureStore.getItem("loginPassword") 
+      if(defaultPassword != null){
+        return defaultPassword;
+      }
+      return '';
+    }
+
+    const [instance, setInstance] = useState(getDefaultInstance());
+    const [username, setUsername] = useState(getDefaultUsername());
+    const [password, setPassword] = useState(getDefaultPassword());
 
     const handleInstance = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
         const text = e.nativeEvent.text; 
@@ -39,7 +63,7 @@ export function LoginPage({navigation}){
             navigation.dispatch(
                 CommonActions.reset({
                   index: 0,
-                  routes: [{ name: 'Browser' }, {name: "Account"}], 
+                  routes: [{ name: 'Browser' }], 
                 })
               );
         }

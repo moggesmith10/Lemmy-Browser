@@ -3,7 +3,7 @@ import { StateProvider, useSharedState } from "./StateContext";
 import { StateContext } from "./StateContext";
 import { Context, useContext } from "react";
 import GlobalStateService from "./StateService";
-
+import * as SecureStore from 'expo-secure-store';
 
 
 export class LoginService {
@@ -20,6 +20,9 @@ export class LoginService {
 		};
 		try {
 			await client.login(loginForm);
+			SecureStore.setItemAsync("loginInstance", instance)
+			SecureStore.setItemAsync("loginUsername", username_or_email)
+			SecureStore.setItemAsync("loginPassword", password)
 			return client;
 		} catch (e) {
 			console.log(e);
