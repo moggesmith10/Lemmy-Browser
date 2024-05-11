@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import GlobalStateService from "../components/StateService";
-import { LemmyHttp, Post, PostView } from "lemmy-js-client";
+import { LemmyHttp, Post, PostView, ListingType } from "lemmy-js-client";
 import { BrowserStyles } from "../styles/Browser";
 import { CommonStyles } from "../styles/Global";
 import { useSharedState } from "../components/StateContext";
@@ -15,7 +15,14 @@ let state = GlobalStateService.getInstance();
 export function BrowserPage({ navigation }) {
 
 	const [items, setItems] = useState([]);
+	const [environment, setEnvironment] : [ListingType, Function] = useState("Subscribed")
 	const [page, setPage] = useState(1);
+
+	function changeEnvironment(environment : ListingType){
+		setEnvironment(environment);
+		setPage(1);
+		setItems([]);
+	}
 
 	//Chat GPT
 	function mergeArraysByValue(arr1: Array<PostView>, arr2: Array<PostView>) {
@@ -39,7 +46,7 @@ export function BrowserPage({ navigation }) {
 		client = state.get("client");
 		if (client != undefined) {
 			let currentPage = page;
-			let posts = (await client.getPosts({ page: currentPage })).posts;
+			let posts = (await client.getPosts({ page: currentPage, type_:environment })).posts;
 
 			setPage(page + 1);
 
@@ -50,6 +57,17 @@ export function BrowserPage({ navigation }) {
 	return (
 		<View key={0} style={[BrowserStyles.page, CommonStyles.page]}>
 			<View>
+				<View style={BrowserStyles.environmentButtonContainer}>
+				<TouchableOpacity style={[CommonStyles.button, BrowserStyles.environmentButton]} onPress={() => changeEnvironment("Subscribed")}>
+					<Text>Subscribed</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={[CommonStyles.button, BrowserStyles.environmentButton]} onPress={() => changeEnvironment("Local")}>
+					<Text>Local</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={[CommonStyles.button, BrowserStyles.environmentButton]} onPress={() => changeEnvironment("All")}>
+					<Text>All</Text>
+				</TouchableOpacity>
+				</View>
 				<FlatList
 					data={items}
 					renderItem={({ item }) => (

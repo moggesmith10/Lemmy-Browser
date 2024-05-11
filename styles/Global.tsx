@@ -24,6 +24,7 @@ export const CommonStyles = StyleSheet.create({
     flex: 1
   },
   button:{
+    color: "white",
     borderStyle: "solid",
     backgroundColor: "grey",
     textAlign:"center",

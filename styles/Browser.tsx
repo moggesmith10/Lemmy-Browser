@@ -14,4 +14,11 @@ export const BrowserStyles = StyleSheet.create({
 		borderCurve: "circular",
 		borderRadius: 10
 	},
+	environmentButtonContainer:{
+		flexDirection: "row"
+	},
+	environmentButton:{
+		margin: 10,
+		color: "white"
+	}
 });
