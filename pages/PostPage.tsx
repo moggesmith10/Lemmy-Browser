@@ -5,9 +5,10 @@ import { PostStyles } from "../styles/Post";
 import FullWidthImage from 'react-native-fullwidth-image'
 import { displayImage } from "../functions/DisplayImage";
 import { displayContent } from "../functions/DisplayContent";
-import { displayVotes } from "../functions/DisplayVotes";
+import { displayVotesForPost } from "../functions/DisplayVotes";
 import { CommentService } from "../components/CommentService"
 import { useEffect, useState } from "react";
+import { Comment } from "../visual/Comment";
 
 export function PostPage({ route, navigation }) {
 
@@ -70,19 +71,13 @@ export function PostPage({ route, navigation }) {
 							</View>
 							<Text style={[PostStyles.body]}>{post.post.body}</Text>
 							{displayContent(post)}
-							{displayVotes(post)}
+							{displayVotesForPost(post)}
 						</View>
 					)
 				}
 
 				data={comments}
-				renderItem={({ item }: { item: CommentView }) => (
-					<View style={[PostStyles.commentContainer]}>
-						<Text style={[PostStyles.commentPoster]}>{item.creator.name}</Text>
-						<Text style={[PostStyles.comment]} >{item.comment.content}</Text>
-					</View>
-
-				)}
+				renderItem={(c) => Comment({comment: c.item})}
 				keyExtractor={(item: CommentView) =>
 					item.community.id.toString() + "|" + item.comment.id.toString()
 				}

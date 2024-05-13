@@ -7,7 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { TextPostStyles } from "../styles/TextPost";
 import { displayImage } from "../functions/DisplayImage";
 import { displayContent } from "../functions/DisplayContent";
-import { displayVotes } from "../functions/DisplayVotes";
+import { displayVotesForPost } from "../functions/DisplayVotes";
 
 export function TextPost({
 	navigation,
@@ -31,7 +31,7 @@ export function TextPost({
 							</Text>
 							<Text style={[TextPostStyles.title]}>{post.post.name}</Text>
 							{displayContent(post)}
-							{displayVotes(post)}
+							{displayVotesForPost(post)}
 						</TouchableOpacity>
 					</View>
 				);
