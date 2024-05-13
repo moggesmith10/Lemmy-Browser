@@ -15,6 +15,10 @@ export const PostStyles = StyleSheet.create({
     body:{
         color:"lightgrey"
     },
+    commentContainer:{
+        backgroundColor: "rgba(40,40,50,255)",
+        margin: 5
+    },
     commentPoster:{
         color:"lightgrey",
         fontSize: 20

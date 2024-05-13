@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, ScrollView } from "react-native";
 import GlobalStateService from "../components/StateService";
 import { LemmyHttp, Post, PostView, ListingType } from "lemmy-js-client";
 import { BrowserStyles } from "../styles/Browser";
@@ -8,7 +8,6 @@ import { useSharedState } from "../components/StateContext";
 import { TextPost } from "../visual/Post";
 import { LoginStyles } from "../styles/Login";
 import InfiniteScroll from "react-infinite-scroller";
-import { useNavigationContainerRef } from "@react-navigation/native";
 
 let state = GlobalStateService.getInstance();
 
@@ -22,6 +21,7 @@ export function BrowserPage({ navigation }) {
 		setEnvironment(environment);
 		setPage(1);
 		setItems([]);
+		loadMorePosts();
 	}
 
 	//Chat GPT
@@ -53,6 +53,12 @@ export function BrowserPage({ navigation }) {
 			setItems(mergeArraysByValue(items, posts));
 		}
 	}
+
+	useEffect(() => {
+		if (page == 1) {
+			loadMorePosts();
+		}
+	})
 
 	return (
 		<View key={0} style={[BrowserStyles.page, CommonStyles.page]}>

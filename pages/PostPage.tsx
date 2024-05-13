@@ -1,5 +1,5 @@
 import { PostView, CommentView } from "lemmy-js-client";
-import { View, Text, Image, ImageURISource, FlatList } from "react-native";
+import { View, Text, Image, ImageURISource, FlatList, ScrollView } from "react-native";
 import { CommonStyles } from "../styles/Global";
 import { PostStyles } from "../styles/Post";
 import FullWidthImage from 'react-native-fullwidth-image'
@@ -38,7 +38,7 @@ export function PostPage({ route, navigation }) {
 	async function loadMoreComments() {
 		if (!endReached) {
 			let newComments = commentService.getComment(post.post.id, page)
-			if((await newComments).length == 0){
+			if ((await newComments).length == 0) {
 				setEndReached(true);
 			}
 
@@ -57,19 +57,27 @@ export function PostPage({ route, navigation }) {
 
 	return (
 		<View style={[CommonStyles.page]}>
-			<View style={[PostStyles.upper]}>
-				<Text style={[PostStyles.header]}>
-					{post.community.title + " | " + post.creator.name}
-				</Text>
-				<Text style={[PostStyles.title]}>{post.post.name}</Text>
-			</View>
-			<Text style={[PostStyles.body]}>{post.post.body}</Text>
-			{displayContent(post)}
-			{displayVotes(post)}
+
 			<FlatList
+				ListHeaderComponent={
+					(
+						<View>
+							<View style={[PostStyles.upper]}>
+								<Text style={[PostStyles.header]}>
+									{post.community.title + " | " + post.creator.name}
+								</Text>
+								<Text style={[PostStyles.title]}>{post.post.name}</Text>
+							</View>
+							<Text style={[PostStyles.body]}>{post.post.body}</Text>
+							{displayContent(post)}
+							{displayVotes(post)}
+						</View>
+					)
+				}
+
 				data={comments}
 				renderItem={({ item }: { item: CommentView }) => (
-					<View>
+					<View style={[PostStyles.commentContainer]}>
 						<Text style={[PostStyles.commentPoster]}>{item.creator.name}</Text>
 						<Text style={[PostStyles.comment]} >{item.comment.content}</Text>
 					</View>
