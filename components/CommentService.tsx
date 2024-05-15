@@ -15,4 +15,11 @@ export class CommentService {
     
         return (await client.getComments({post_id: postId})).comments;
     }
+
+    async replyToComment(postId : number, commentId: number, reply: string){
+        let client: LemmyHttp;
+		client = state.get("client");
+    
+        return (await client.createComment({post_id: postId, parent_id:commentId, content: reply}));
+    }
 }

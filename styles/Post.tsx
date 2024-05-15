@@ -26,5 +26,31 @@ export const PostStyles = StyleSheet.create({
     comment:{
         color:"white",
         fontSize: 15
+    },
+    commentReply:{
+        backgroundColor: "rgba(50,50,60,255)",
+        flex: 0.8,
+        flexDirection: "row",
+        height: 35
+    },
+    commentReplyInput:{
+        flex: 0.8,
+        color: "white"
+    },
+    commentReplyButton:{
+        flex: 0.2,
+        color: "red",
+        margin: 0,
+    },
+    commentReplyButtonText:{
+        flex: 1,
+        color: "black",
+        margin: 0,
+        textAlign: "center"
+    },
+    invisible:{
+        height: 0,
+        width: 0,
+        position: "absolute"
     }
 });

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, ScrollView } from "react-native";
+import {
+	View,
+	Text,
+	FlatList,
+	TouchableOpacity,
+	ScrollView,
+} from "react-native";
 import GlobalStateService from "../components/StateService";
 import { LemmyHttp, Post, PostView, ListingType } from "lemmy-js-client";
 import { BrowserStyles } from "../styles/Browser";
@@ -8,17 +14,33 @@ import { useSharedState } from "../components/StateContext";
 import { TextPost } from "../visual/Post";
 import { LoginStyles } from "../styles/Login";
 import InfiniteScroll from "react-infinite-scroller";
+import { PostService } from "../components/PostService";
 
 let state = GlobalStateService.getInstance();
 
-export function BrowserPage({ navigation }) {
+const defaultState = "Subscribed";
 
-	const [items, setItems] = useState([]);
-	const [environment, setEnvironment] : [ListingType, Function] = useState("Subscribed")
+export function BrowserPage({ navigation }) {
+	const [items, setItems]: [Array<PostView>, Function] = useState([]);
+	const [environment, setEnvironment]: [ListingType, Function] =
+		useState(defaultState);
+	const [communityId, setCommunityId]: [number, Function] = useState(null);
 	const [page, setPage] = useState(1);
 
-	function changeEnvironment(environment : ListingType){
+	let postService = new PostService();
+
+	function changeEnvironment(environment: ListingType) {
+		setCommunityId(null);
 		setEnvironment(environment);
+		resetItems();
+	}
+
+	function updateCommunityId(cId : number){
+		setCommunityId(cId);
+		resetItems();
+	}
+
+	function resetItems(){
 		setPage(1);
 		setItems([]);
 		loadMorePosts();
@@ -45,8 +67,11 @@ export function BrowserPage({ navigation }) {
 		let client: LemmyHttp;
 		client = state.get("client");
 		if (client != undefined) {
-			let currentPage = page;
-			let posts = (await client.getPosts({ page: currentPage, type_:environment })).posts;
+			console.log(communityId)
+			let posts =
+				communityId != null
+					? await postService.getPostsByCommunity(page, communityId)
+					: await postService.getPosts(page, environment);
 
 			setPage(page + 1);
 
@@ -58,37 +83,51 @@ export function BrowserPage({ navigation }) {
 		if (page == 1) {
 			loadMorePosts();
 		}
-	})
+	});
 
 	return (
 		<View key={0} style={[BrowserStyles.page, CommonStyles.page]}>
 			<View>
 				<View style={BrowserStyles.environmentButtonContainer}>
-				<TouchableOpacity style={[CommonStyles.button, BrowserStyles.environmentButton]} onPress={() => changeEnvironment("Subscribed")}>
-					<Text>Subscribed</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={[CommonStyles.button, BrowserStyles.environmentButton]} onPress={() => changeEnvironment("Local")}>
-					<Text>Local</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={[CommonStyles.button, BrowserStyles.environmentButton]} onPress={() => changeEnvironment("All")}>
-					<Text>All</Text>
-				</TouchableOpacity>
+					<TouchableOpacity
+						style={[CommonStyles.button, BrowserStyles.environmentButton]}
+						onPress={() => changeEnvironment("Subscribed")}
+					>
+						<Text>Subscribed</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[CommonStyles.button, BrowserStyles.environmentButton]}
+						onPress={() => changeEnvironment("Local")}
+					>
+						<Text>Local</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[CommonStyles.button, BrowserStyles.environmentButton]}
+						onPress={() => changeEnvironment("All")}
+					>
+						<Text>All</Text>
+					</TouchableOpacity>
 				</View>
 				<FlatList
 					data={items}
 					renderItem={({ item }) => (
-						<TextPost navigation={navigation} post={item} />
+						<TextPost
+							navigation={navigation}
+							post={item}
+							setCommunityId={updateCommunityId}
+						/>
 					)}
 					keyExtractor={(item: PostView) =>
 						item.community.id.toString() + "|" + item.post.id.toString()
 					}
 					onEndReached={loadMorePosts}
-					/*{items.map((item, index) => (rl
-					<TextPost  />
-				))}
-			}*/
 				/>
 			</View>
+			{/**This button is now not used anymore, the flatlist will autoload more posts.
+			 * However I'm leaving this here if filters are leaving the page empty
+			 * (I.e if we have filters that makes the next page empty, you can force it to load again if you think there are more posts)
+			 * It may also be possible for flatlist to not update if end of list is not outside of page
+			 */}
 			<Text
 				onPress={loadMorePosts}
 				style={[CommonStyles.button, LoginStyles.button]}

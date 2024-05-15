@@ -12,12 +12,14 @@ import { displayVotesForPost } from "../functions/DisplayVotes";
 export function TextPost({
 	navigation,
 	post,
+	setCommunityId,
 }: {
 	navigation;
 	post: PostView;
+	setCommunityId: Function;
 }) {
 	function openPost() {
-		navigation.navigate("Post", { post: post });
+		navigation.navigate("Post", { outdatedPost: post });
 	}
 
 	if (post != undefined)
@@ -26,9 +28,23 @@ export function TextPost({
 				return (
 					<View style={[BrowserStyles.post]}>
 						<TouchableOpacity onPress={openPost}>
-							<Text style={[TextPostStyles.header]}>
-								{post.community.title + " | " + post.creator.name}
-							</Text>
+							<View style={TextPostStyles.header}>
+								<TouchableOpacity
+									onPress={() => {
+										setCommunityId(post.community.id);
+									}}
+								>
+									<Text style={[TextPostStyles.headerText]}>
+										{post.community.title}
+									</Text>
+								</TouchableOpacity>
+								<Text style={[TextPostStyles.headerText]}> | </Text>
+								<TouchableOpacity>
+									<Text style={[TextPostStyles.headerText]}>
+										{post.creator.name}
+									</Text>
+								</TouchableOpacity>
+							</View>
 							<Text style={[TextPostStyles.title]}>{post.post.name}</Text>
 							{displayContent(post)}
 							{displayVotesForPost(post)}
