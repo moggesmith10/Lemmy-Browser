@@ -48,7 +48,7 @@ export function Comment({ comment, setPostLoaded }: { comment: CommentView, setP
 			<Text style={[PostStyles.commentPoster]}>{comment.creator.name}</Text>
 			<Text style={[PostStyles.comment]}>{comment.comment.content}</Text>
 			{displayVotesForComment(comment)}
-			<TouchableOpacity onPress={changeInvisible}>
+			<TouchableOpacity onPress={() =>changeInvisible()}>
 				<Text style={CommonStyles.text}>Reply</Text>
 			</TouchableOpacity>
 			<CommentReplyInput

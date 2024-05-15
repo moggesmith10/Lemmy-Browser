@@ -14,7 +14,7 @@ export function CommentReplyInput({ invisible, updateText, postCommentFunction, 
 			<TextInput style={PostStyles.commentReplyInput} onChange={handleText} />
 			<TouchableOpacity
 				style={[CommonStyles.button, PostStyles.commentReplyButton]}
-				onPress={postCommentFunction(id)}
+				onPress={() => postCommentFunction(id)}
 			>
 				<Text style={PostStyles.commentReplyButtonText}>Post</Text>
 			</TouchableOpacity>
