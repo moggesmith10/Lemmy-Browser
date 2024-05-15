@@ -11,13 +11,27 @@ import { displayVotesForComment } from "../functions/DisplayVotes";
 import { CommentReplyInput } from "./CommentReplyInput";
 import { CommonStyles } from "../styles/Global";
 import React, { useState } from "react"; // Added React import
+import { CommentService } from "../components/CommentService";
 
-export function Comment({ comment }: { comment: CommentView }) {
+/**
+ * 
+ * @param comment The comment
+ * @param setPostLoaded The function to the stateful setter, used to reload post after reply is sent
+ * @returns 
+ */
+export function Comment({ comment, setPostLoaded }: { comment: CommentView, setPostLoaded: Function }) {
 	const [invisible, setInvisible] = useState(true);
 
 	function changeInvisible() {
 		let prev = invisible;
 		setInvisible(!prev);
+	}
+
+	function reply(id){
+		//Instantiate service on reply. We should just use a single instance for performance, but I dont have time for that
+		let service = new CommentService();
+		service.replyToComment(comment.post.id, comment.comment.id, commentReply)
+		setPostLoaded(false)
 	}
 
 	const [commentReply, setCommentReply] = useState("");
@@ -40,6 +54,8 @@ export function Comment({ comment }: { comment: CommentView }) {
 			<CommentReplyInput
 				invisible={invisible}
 				updateText={handleCommentReply}
+				postCommentFunction={reply}
+				id={comment.comment.id}
 			/>
 		</View>
 	);

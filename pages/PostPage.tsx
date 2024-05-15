@@ -17,6 +17,8 @@ import { CommentService } from "../components/CommentService";
 import { useCallback, useEffect, useState } from "react";
 import { Comment } from "../visual/Comment";
 import { PostService } from "../components/PostService";
+import { CommentReplyInput } from "../visual/CommentReplyInput";
+import { server } from "typescript";
 
 export function PostPage({ route, navigation }) {
 	//Use post sent from browser, note that some updates might happen since it was loaded to feed
@@ -28,6 +30,7 @@ export function PostPage({ route, navigation }) {
 	const [community, setCommunity]: [CommunityView, Function] = useState(null);
 	const [postLoading, setPostLoading]: [boolean, Function] = useState(false); //Avoid loading post from api multiple times
 	const [postLoaded, setPostLoaded]: [boolean, Function] = useState(false); //Dont show post until it has been updated. We could in theory show the old post until new is updated in future
+	const [comment, setComment] = useState(""); //Comment on post
 
 	let commentService: CommentService = new CommentService();
 	let postService: PostService = new PostService();
@@ -80,6 +83,11 @@ export function PostPage({ route, navigation }) {
 		}
 	}
 
+	function postComment(id){
+		let service = new CommentService();
+		service.postComment(id, comment)
+	}
+
 	useEffect(() => {
 		console.log("Loading post loaded:" + postLoaded);
 		if (!postLoaded) {
@@ -105,10 +113,11 @@ export function PostPage({ route, navigation }) {
 							<Text style={[PostStyles.body]}>{post.post.body}</Text>
 							{displayContent(post)}
 							{displayVotesForPost(post)}
+							{CommentReplyInput({invisible: false, updateText: setComment, postCommentFunction: postComment, id: post.post.id})}
 						</View>
 					}
 					data={comments}
-					renderItem={(c) => <Comment comment={c.item} />}
+					renderItem={(c) => <Comment comment={c.item} setPostLoaded={setPostLoaded}/>}
 					keyExtractor={(item: CommentView) =>
 						item.community.id.toString() + "|" + item.comment.id.toString()
 					}
