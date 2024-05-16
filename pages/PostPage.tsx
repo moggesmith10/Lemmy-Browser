@@ -75,7 +75,6 @@ export function PostPage({ route, navigation }) {
 			setPostLoading(true);
 
 			postService.getPost(outdatedPost.post.id).then((p) => {
-
 				setPost(p.post_view);
 				setCommunity(p.community_view);
 
@@ -99,41 +98,44 @@ export function PostPage({ route, navigation }) {
 	});
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[CommonStyles.page]}>
-				{postLoaded ? (
-					<FlatList
-						ListHeaderComponent={
-							<View>
-								<View style={[PostStyles.upper]}>
-									<Text style={[PostStyles.header]}>
-										{community.community.title + " | " + post.creator.name}
-									</Text>
-									<Text style={[PostStyles.title]}>{post.post.name}</Text>
-								</View>
-								<Text style={[PostStyles.body]}>{post.post.body}</Text>
-								{displayContent(post)}
-								{displayVotesForPost(post)}
-								<Vote post={post} updatePost={setPost} />
-								{CommentReplyInput({
-									invisible: false,
-									updateText: setComment,
-									postCommentFunction: postComment,
-									id: post.post.id,
-								})}
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			style={[CommonStyles.page]}
+		>
+			{postLoaded ? (
+				<FlatList
+					ListHeaderComponent={
+						<View>
+							<View style={[PostStyles.upper]}>
+								<Text style={[PostStyles.header]}>
+									{community.community.title + " | " + post.creator.name}
+								</Text>
+								<Text style={[PostStyles.title]}>{post.post.name}</Text>
 							</View>
-						}
-						data={comments}
-						renderItem={(c) => (
-							<Comment comment={c.item} setPostLoaded={setPostLoaded} />
-						)}
-						keyExtractor={(item: CommentView) =>
-							item.community.id.toString() + "|" + item.comment.id.toString()
-						}
-						onEndReached={loadMoreComments}
-					/>
-				) : (
-					<View></View>
-				)}
+							<Text style={[PostStyles.body]}>{post.post.body}</Text>
+							{displayContent(post)}
+							{displayVotesForPost(post)}
+							<Vote post={post} updatePost={setPost} />
+							{CommentReplyInput({
+								invisible: false,
+								updateText: setComment,
+								postCommentFunction: postComment,
+								id: post.post.id,
+							})}
+						</View>
+					}
+					data={comments}
+					renderItem={(c) => (
+						<Comment comment={c.item} setPostLoaded={setPostLoaded} />
+					)}
+					keyExtractor={(item: CommentView) =>
+						item.community.id.toString() + "|" + item.comment.id.toString()
+					}
+					onEndReached={loadMoreComments}
+				/>
+			) : (
+				<View></View>
+			)}
 		</KeyboardAvoidingView>
 	);
 }

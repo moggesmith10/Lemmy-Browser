@@ -35,12 +35,12 @@ export function BrowserPage({ navigation }) {
 		resetItems();
 	}
 
-	function updateCommunityId(cId : number){
+	function updateCommunityId(cId: number) {
 		setCommunityId(cId);
 		resetItems();
 	}
 
-	function resetItems(){
+	function resetItems() {
 		setPage(1);
 		setItems([]);
 		loadMorePosts();

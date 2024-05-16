@@ -19,8 +19,7 @@ export function TextPost({
 	post: PostView;
 	setCommunityId: Function;
 }) {
-	const[thisPost, setPost]: [PostView, Function] = useState(post);
-
+	const [thisPost, setPost]: [PostView, Function] = useState(post);
 
 	function openPost() {
 		navigation.navigate("Post", { outdatedPost: post });

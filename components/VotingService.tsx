@@ -8,7 +8,6 @@ export class VotingService {
 		let client: LemmyHttp;
 		client = state.get("client");
 
-
 		return await client.likePost({ post_id: postId, score: vote });
 	}
 }

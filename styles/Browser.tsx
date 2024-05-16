@@ -6,19 +6,19 @@ export const BrowserStyles = StyleSheet.create({
 	},
 	post: {
 		color: "white",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "white",
-        padding: 2,
-        margin: 5,
+		borderStyle: "solid",
+		borderWidth: 1,
+		borderColor: "white",
+		padding: 2,
+		margin: 5,
 		borderCurve: "circular",
-		borderRadius: 10
+		borderRadius: 10,
 	},
-	environmentButtonContainer:{
-		flexDirection: "row"
+	environmentButtonContainer: {
+		flexDirection: "row",
 	},
-	environmentButton:{
+	environmentButton: {
 		margin: 10,
-		color: "white"
-	}
+		color: "white",
+	},
 });

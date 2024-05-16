@@ -8,22 +8,20 @@ import { LoginPage } from "./pages/LoginPage";
 import { BrowserPage } from "./pages/BrowserPage";
 import { PostPage } from "./pages/PostPage";
 
-
 export default function App() {
 	const Stack = createNativeStackNavigator();
 
-
 	return (
 		<StateProvider>
-		<NavigationContainer>
-		  <Stack.Navigator initialRouteName="Welcome">
-			<Stack.Screen name="Welcome" component={WelcomePage}/>
-			<Stack.Screen name="Login" component={LoginPage}/>
-			<Stack.Screen name="Browser" component={BrowserPage}/>
-			<Stack.Screen name="Post" component={PostPage}/>
-		  </Stack.Navigator>
-		</NavigationContainer>
-	  </StateProvider>
+			<NavigationContainer>
+				<Stack.Navigator initialRouteName="Welcome">
+					<Stack.Screen name="Welcome" component={WelcomePage} />
+					<Stack.Screen name="Login" component={LoginPage} />
+					<Stack.Screen name="Browser" component={BrowserPage} />
+					<Stack.Screen name="Post" component={PostPage} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		</StateProvider>
 	);
 }
 

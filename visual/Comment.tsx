@@ -14,12 +14,18 @@ import React, { useState } from "react"; // Added React import
 import { CommentService } from "../components/CommentService";
 
 /**
- * 
+ *
  * @param comment The comment
  * @param setPostLoaded The function to the stateful setter, used to reload post after reply is sent
- * @returns 
+ * @returns
  */
-export function Comment({ comment, setPostLoaded }: { comment: CommentView, setPostLoaded: Function }) {
+export function Comment({
+	comment,
+	setPostLoaded,
+}: {
+	comment: CommentView;
+	setPostLoaded: Function;
+}) {
 	const [invisible, setInvisible] = useState(true);
 	const [commentReply, setCommentReply] = useState("");
 
@@ -28,11 +34,11 @@ export function Comment({ comment, setPostLoaded }: { comment: CommentView, setP
 		setInvisible(!prev);
 	}
 
-	function reply(id){
+	function reply(id) {
 		//Instantiate service on reply. We should just use a single instance for performance, but I dont have time for that
 		let service = new CommentService();
-		service.replyToComment(comment.post.id, comment.comment.id, commentReply)
-		setPostLoaded(false)
+		service.replyToComment(comment.post.id, comment.comment.id, commentReply);
+		setPostLoaded(false);
 	}
 
 	const handleCommentReply = (
@@ -47,7 +53,7 @@ export function Comment({ comment, setPostLoaded }: { comment: CommentView, setP
 			<Text style={[PostStyles.commentPoster]}>{comment.creator.name}</Text>
 			<Text style={[PostStyles.comment]}>{comment.comment.content}</Text>
 			{displayVotesForComment(comment)}
-			<TouchableOpacity onPress={() =>changeInvisible()}>
+			<TouchableOpacity onPress={() => changeInvisible()}>
 				<Text style={CommonStyles.text}>Reply</Text>
 			</TouchableOpacity>
 			<CommentReplyInput

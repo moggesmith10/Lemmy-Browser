@@ -3,12 +3,14 @@ import { StateProvider, useSharedState } from "./StateContext";
 import { StateContext } from "./StateContext";
 import { Context, useContext } from "react";
 import GlobalStateService from "./StateService";
-import * as SecureStore from 'expo-secure-store';
-
+import * as SecureStore from "expo-secure-store";
 
 export class LoginService {
-
-	async login(instance: string, username_or_email: string, password: string) : Promise<LemmyHttp> {
+	async login(
+		instance: string,
+		username_or_email: string,
+		password: string
+	): Promise<LemmyHttp> {
 		console.log(instance);
 		console.log(username_or_email);
 		console.log(password.length);
@@ -19,11 +21,11 @@ export class LoginService {
 			password: password,
 		};
 		try {
-		 	let loginResponse = await client.login(loginForm);
+			let loginResponse = await client.login(loginForm);
 			client.setHeaders({ Authorization: `Bearer ${loginResponse.jwt}` });
-			SecureStore.setItemAsync("loginInstance", instance)
-			SecureStore.setItemAsync("loginUsername", username_or_email)
-			SecureStore.setItemAsync("loginPassword", password)
+			SecureStore.setItemAsync("loginInstance", instance);
+			SecureStore.setItemAsync("loginUsername", username_or_email);
+			SecureStore.setItemAsync("loginPassword", password);
 			return client;
 		} catch (e) {
 			console.log(e);
