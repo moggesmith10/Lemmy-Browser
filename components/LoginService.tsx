@@ -19,7 +19,8 @@ export class LoginService {
 			password: password,
 		};
 		try {
-			await client.login(loginForm);
+		 	let loginResponse = await client.login(loginForm);
+			client.setHeaders({ Authorization: `Bearer ${loginResponse.jwt}` });
 			SecureStore.setItemAsync("loginInstance", instance)
 			SecureStore.setItemAsync("loginUsername", username_or_email)
 			SecureStore.setItemAsync("loginPassword", password)

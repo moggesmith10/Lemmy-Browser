@@ -6,6 +6,8 @@ import {
 	ImageURISource,
 	FlatList,
 	ScrollView,
+	KeyboardAvoidingView,
+	Platform,
 } from "react-native";
 import { CommonStyles } from "../styles/Global";
 import { PostStyles } from "../styles/Post";
@@ -19,6 +21,7 @@ import { Comment } from "../visual/Comment";
 import { PostService } from "../components/PostService";
 import { CommentReplyInput } from "../visual/CommentReplyInput";
 import { server } from "typescript";
+import { Vote } from "../visual/Vote";
 
 export function PostPage({ route, navigation }) {
 	//Use post sent from browser, note that some updates might happen since it was loaded to feed
@@ -70,10 +73,8 @@ export function PostPage({ route, navigation }) {
 	async function loadPost() {
 		if (!postLoading) {
 			setPostLoading(true);
-			console.log("Start loading  post:" + outdatedPost.post.id);
 
 			postService.getPost(outdatedPost.post.id).then((p) => {
-				console.log("Start loading  post:" + p.post_view.post.id);
 
 				setPost(p.post_view);
 				setCommunity(p.community_view);
@@ -83,13 +84,12 @@ export function PostPage({ route, navigation }) {
 		}
 	}
 
-	function postComment(id){
+	function postComment(id) {
 		let service = new CommentService();
-		service.postComment(id, comment)
+		service.postComment(id, comment);
 	}
 
 	useEffect(() => {
-		console.log("Loading post loaded:" + postLoaded);
 		if (!postLoaded) {
 			loadPost();
 		}
@@ -99,33 +99,41 @@ export function PostPage({ route, navigation }) {
 	});
 
 	return (
-		<View style={[CommonStyles.page]}>
-			{postLoaded ? (
-				<FlatList
-					ListHeaderComponent={
-						<View>
-							<View style={[PostStyles.upper]}>
-								<Text style={[PostStyles.header]}>
-									{community.community.title + " | " + post.creator.name}
-								</Text>
-								<Text style={[PostStyles.title]}>{post.post.name}</Text>
+		<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={[CommonStyles.page]}>
+				{postLoaded ? (
+					<FlatList
+						ListHeaderComponent={
+							<View>
+								<View style={[PostStyles.upper]}>
+									<Text style={[PostStyles.header]}>
+										{community.community.title + " | " + post.creator.name}
+									</Text>
+									<Text style={[PostStyles.title]}>{post.post.name}</Text>
+								</View>
+								<Text style={[PostStyles.body]}>{post.post.body}</Text>
+								{displayContent(post)}
+								{displayVotesForPost(post)}
+								<Vote post={post} updatePost={setPost} />
+								{CommentReplyInput({
+									invisible: false,
+									updateText: setComment,
+									postCommentFunction: postComment,
+									id: post.post.id,
+								})}
 							</View>
-							<Text style={[PostStyles.body]}>{post.post.body}</Text>
-							{displayContent(post)}
-							{displayVotesForPost(post)}
-							{CommentReplyInput({invisible: false, updateText: setComment, postCommentFunction: postComment, id: post.post.id})}
-						</View>
-					}
-					data={comments}
-					renderItem={(c) => <Comment comment={c.item} setPostLoaded={setPostLoaded}/>}
-					keyExtractor={(item: CommentView) =>
-						item.community.id.toString() + "|" + item.comment.id.toString()
-					}
-					onEndReached={loadMoreComments}
-				/>
-			) : (
-				<View></View>
-			)}
-		</View>
+						}
+						data={comments}
+						renderItem={(c) => (
+							<Comment comment={c.item} setPostLoaded={setPostLoaded} />
+						)}
+						keyExtractor={(item: CommentView) =>
+							item.community.id.toString() + "|" + item.comment.id.toString()
+						}
+						onEndReached={loadMoreComments}
+					/>
+				) : (
+					<View></View>
+				)}
+		</KeyboardAvoidingView>
 	);
 }

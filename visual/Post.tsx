@@ -8,6 +8,7 @@ import { TextPostStyles } from "../styles/TextPost";
 import { displayImage } from "../functions/DisplayImage";
 import { displayContent } from "../functions/DisplayContent";
 import { displayVotesForPost } from "../functions/DisplayVotes";
+import { Vote } from "./Vote";
 
 export function TextPost({
 	navigation,
@@ -18,6 +19,9 @@ export function TextPost({
 	post: PostView;
 	setCommunityId: Function;
 }) {
+	const[thisPost, setPost]: [PostView, Function] = useState(post);
+
+
 	function openPost() {
 		navigation.navigate("Post", { outdatedPost: post });
 	}
@@ -31,23 +35,24 @@ export function TextPost({
 							<View style={TextPostStyles.header}>
 								<TouchableOpacity
 									onPress={() => {
-										setCommunityId(post.community.id);
+										setCommunityId(thisPost.community.id);
 									}}
 								>
 									<Text style={[TextPostStyles.headerText]}>
-										{post.community.title}
+										{thisPost.community.title}
 									</Text>
 								</TouchableOpacity>
 								<Text style={[TextPostStyles.headerText]}> | </Text>
 								<TouchableOpacity>
 									<Text style={[TextPostStyles.headerText]}>
-										{post.creator.name}
+										{thisPost.creator.name}
 									</Text>
 								</TouchableOpacity>
 							</View>
 							<Text style={[TextPostStyles.title]}>{post.post.name}</Text>
-							{displayContent(post)}
-							{displayVotesForPost(post)}
+							{displayContent(thisPost)}
+							<Vote post={thisPost} updatePost={setPost} />
+							{displayVotesForPost(thisPost)}
 						</TouchableOpacity>
 					</View>
 				);

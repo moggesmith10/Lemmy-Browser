@@ -21,6 +21,7 @@ import { CommentService } from "../components/CommentService";
  */
 export function Comment({ comment, setPostLoaded }: { comment: CommentView, setPostLoaded: Function }) {
 	const [invisible, setInvisible] = useState(true);
+	const [commentReply, setCommentReply] = useState("");
 
 	function changeInvisible() {
 		let prev = invisible;
@@ -33,8 +34,6 @@ export function Comment({ comment, setPostLoaded }: { comment: CommentView, setP
 		service.replyToComment(comment.post.id, comment.comment.id, commentReply)
 		setPostLoaded(false)
 	}
-
-	const [commentReply, setCommentReply] = useState("");
 
 	const handleCommentReply = (
 		e: NativeSyntheticEvent<TextInputChangeEventData>

@@ -67,7 +67,6 @@ export function BrowserPage({ navigation }) {
 		let client: LemmyHttp;
 		client = state.get("client");
 		if (client != undefined) {
-			console.log(communityId)
 			let posts =
 				communityId != null
 					? await postService.getPostsByCommunity(page, communityId)
